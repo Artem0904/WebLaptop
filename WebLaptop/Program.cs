@@ -1,3 +1,4 @@
+using BusinessLogic;
 using DataAccess;
 using WebLaptop;
 
@@ -15,9 +16,26 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext(connStr);
 builder.Services.AddRepositories();
 
-string token = "7724052344:AAGHW_28SNYcFLCXfbwEiUaI5CQ2UagW9t0";
-builder.Services.AddSingleton(new TelegramBotService(token));
+builder.Services.AddCustomServices();
+builder.Services.AddScoped<IBotUserService, BotUserService>();
+
+
+
+
+builder.Services.AddScoped<TelegramBotService>(provider => 
+{
+    var token = "7724052344:AAGHW_28SNYcFLCXfbwEiUaI5CQ2UagW9t0"; // ваш токен
+    var botUserService = provider.GetRequiredService<IBotUserService>();
+    return new TelegramBotService(token, botUserService);
+});
+
+
+// Зареєструйте хостовану службу
 builder.Services.AddHostedService<TelegramBotHostedService>();
+
+
+
+
 
 var app = builder.Build();
 

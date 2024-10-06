@@ -1,4 +1,5 @@
-﻿using DataAccess.Data.Entities;
+﻿using BusinessLogic;
+using DataAccess.Data.Entities;
 using DataAccess.Repositories;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -11,9 +12,11 @@ namespace WebLaptop
     {
         private readonly ITelegramBotClient client;
         //private readonly IRepository<BotUser> botUserRepo;
-        public TelegramBotService(string token/*, IRepository<BotUser> botUserRepo*/)
+        private readonly IBotUserService botUserService;
+        public TelegramBotService(string token, IBotUserService botUserService/*, IRepository<BotUser> botUserRepo*/)
         {
             client = new TelegramBotClient(token);
+            this.botUserService = botUserService;
             //this.botUserRepo = botUserRepo;
         }
 
@@ -60,6 +63,13 @@ namespace WebLaptop
                     );
                     //await botUserRepo.Insert(new BotUser() { Id = message.Chat.Id, Name = message.Chat.Username, UserName= message.Chat.FirstName, PhoneNumber=message.Contact.PhoneNumber});
 
+                    botUserService.Create(new BotUser()
+                    {
+                        Id = message.Chat.Id,
+                        Name = message.Chat.Username,
+                        UserName = message.Chat.FirstName,
+                        PhoneNumber = phoneNumber
+                    });
                 }
                 else
                 {

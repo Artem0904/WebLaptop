@@ -2,19 +2,21 @@
 {
     public class TelegramBotHostedService : IHostedService
     {
-        private readonly TelegramBotService telegramBotService;
         private CancellationTokenSource cancellationTokenSource;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public TelegramBotHostedService(TelegramBotService telegramBotService)
+        public TelegramBotHostedService(IServiceScopeFactory serviceScopeFactory)
         {
-            this.telegramBotService = telegramBotService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            telegramBotService.StartReceiving(cancellationTokenSource.Token);
-            return Task.CompletedTask;
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var telegramBotService = scope.ServiceProvider.GetRequiredService<TelegramBotService>();
+                await telegramBotService.StartReceiving(cancellationToken);
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

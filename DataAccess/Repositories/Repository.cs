@@ -28,7 +28,7 @@ namespace DataAccess.Repositories
             return dbSet.Find(id);
         }
 
-        public virtual async Task Insert(TEntity entity)
+        public virtual void Insert(TEntity entity)
         {
             dbSet.Add(entity);
         }

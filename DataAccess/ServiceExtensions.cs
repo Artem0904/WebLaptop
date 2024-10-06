@@ -10,7 +10,7 @@ namespace DataAccess
     {
         public static void AddDbContext(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<TelegramBotDbContext>(opts => opts.UseNpgsql(connectionString));
+            services.AddDbContext<TelegramBotDbContext>(opts => opts.UseNpgsql(connectionString), ServiceLifetime.Scoped);
         }
 
         public static void AddRepositories(this IServiceCollection services)
