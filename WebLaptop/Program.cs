@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext(connStr);
+builder.Services.AddCustomDbContext(connStr);
 builder.Services.AddRepositories();
 
 builder.Services.AddCustomServices();
@@ -24,13 +24,11 @@ builder.Services.AddScoped<IBotUserService, BotUserService>();
 
 builder.Services.AddScoped<TelegramBotService>(provider => 
 {
-    var token = "7724052344:AAGHW_28SNYcFLCXfbwEiUaI5CQ2UagW9t0"; // ваш токен
-    var botUserService = provider.GetRequiredService<IBotUserService>();
-    return new TelegramBotService(token, botUserService);
+    var token = "7724052344:AAGHW_28SNYcFLCXfbwEiUaI5CQ2UagW9t0";
+    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+    return new TelegramBotService(token, scopeFactory);
 });
 
-
-// Зареєструйте хостовану службу
 builder.Services.AddHostedService<TelegramBotHostedService>();
 
 

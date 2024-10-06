@@ -9,6 +9,8 @@ namespace BusinessLogic
 {
     public interface IBotUserService
     {
-        void Create(BotUser botUser);
+        Task Create(BotUser botUser);
+        Task Delete(long id);
+        Task<BotUser?> Get(long id);
     }
 }

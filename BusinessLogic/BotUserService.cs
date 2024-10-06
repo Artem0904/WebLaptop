@@ -17,11 +17,34 @@ namespace BusinessLogic
            this.botUserRepo = botUserRepo;
         }
 
-        public void Create(BotUser botUser)
+        public async Task Create(BotUser botUser)
         {
-            botUserRepo.Insert(botUser);
-            botUserRepo.Save();
+            if (botUserRepo.GetById(botUser.Id) == null)
+            {
+                 await botUserRepo.Insert(botUser);
+                 await botUserRepo.Save();
+            }
             
+        }
+
+        public async Task Delete(long id)
+        {
+            if (botUserRepo.GetById(id) != null)
+            {
+                await botUserRepo.Delete(id);
+                await botUserRepo.Save();
+            }
+        }
+
+        public async Task<BotUser?> Get(long id)
+        {
+
+            if (botUserRepo.GetById(id) != null)
+            {
+                return botUserRepo.GetById(id);
+            }
+
+            throw new Exception();
         }
     }
 }

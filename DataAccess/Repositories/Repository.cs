@@ -28,14 +28,14 @@ namespace DataAccess.Repositories
             return dbSet.Find(id);
         }
 
-        public virtual void Insert(TEntity entity)
+        public virtual async Task Insert(TEntity entity)
         {
-            dbSet.Add(entity);
+            await dbSet.AddAsync(entity);
         }
 
-        public virtual void Delete(object id)
+        public virtual async Task Delete(object id)
         {
-            TEntity entityToDelete = dbSet.Find(id);
+            TEntity entityToDelete = await dbSet.FindAsync(id);
             Delete(entityToDelete);
         }
 
@@ -54,9 +54,9 @@ namespace DataAccess.Repositories
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+             await context.SaveChangesAsync();
         }
     }
 }

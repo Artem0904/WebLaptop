@@ -8,9 +8,14 @@ namespace DataAccess
 {
     public static class ServiceExtensions
     {
-        public static void AddDbContext(this IServiceCollection services, string connectionString)
+        public static void AddCustomDbContext(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<TelegramBotDbContext>(opts => opts.UseNpgsql(connectionString), ServiceLifetime.Scoped);
+            //services.AddDbContext<TelegramBotDbContext>(opts => opts.UseNpgsql(connectionString), ServiceLifetime.Scoped);
+            services.AddDbContext<TelegramBotDbContext>(opts =>
+            {
+                opts.UseNpgsql(connectionString);
+                //opts.LogTo(Console.WriteLine);
+            }, ServiceLifetime.Scoped); 
         }
 
         public static void AddRepositories(this IServiceCollection services)
