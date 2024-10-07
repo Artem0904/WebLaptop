@@ -47,19 +47,8 @@ namespace WebLaptop
                 var botUserService = scope.ServiceProvider.GetRequiredService<IBotUserService>();
 
                 if (message.Type == MessageType.Text && message.Text.ToLower().Contains("/start"))
-                {
-                    if (botUserService.Get(message.Chat.Id) == null)
-                    {
-                        await RequestPhoneNumberAsync(message.Chat.Id);
-                    }
-                    else
-                    {
-                        await client.SendTextMessageAsync(
-                            chatId: message.Chat.Id,
-                            text: $"Ваш номер телефону вже є в базі: {message.Contact?.PhoneNumber}",
-                            cancellationToken: token
-                        );
-                    }
+                {                  
+                        await RequestPhoneNumberAsync(message.Chat.Id);                   
                 }
                 else if (message.Type == MessageType.Contact)
                 {
@@ -98,8 +87,7 @@ namespace WebLaptop
         {
             var replyMarkup = new ReplyKeyboardMarkup(new[]
             {
-            new KeyboardButton("Надіслати номер телефону") { RequestContact = true }
-        })
+                new KeyboardButton("Надіслати номер телефону") { RequestContact = true }})
             {
                 ResizeKeyboard = true,
                 OneTimeKeyboard = true
